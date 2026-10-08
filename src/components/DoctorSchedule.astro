@@ -1,0 +1,97 @@
+---
+/**
+ * Which days each doctor sees patients. A real table for scanning ("who is in on Wednesday?") plus one
+ * plain sentence per doctor so the same facts read cleanly to screen readers and AI assistants.
+ */
+import { clinic } from '../data/clinic';
+import { doctors } from '../data/doctors';
+import { formatDays } from '../lib/format';
+import { weekdayName } from '../lib/hours';
+
+const days = clinic.hours.openDays;
+---
+
+<table class="table schedule">
+  <caption>Days each doctor sees patients</caption>
+  <thead>
+    <tr>
+      <th scope="col">Doctor</th>
+      {
+        days.map((day) => (
+          <th scope="col" class="schedule__day">
+            <span aria-hidden="true">{weekdayName(day).slice(0, 3)}</span>
+            <span class="visually-hidden">{weekdayName(day)}</span>
+          </th>
+        ))
+      }
+    </tr>
+  </thead>
+  <tbody>
+    {
+      doctors.map((doctor) => (
+        <tr>
+          <th scope="row">{doctor.name}</th>
+          {days.map((day) => (
+            <td class="schedule__day">
+              {doctor.days.includes(day) ? (
+                <svg class="icon schedule__in" viewBox="0 0 24 24" role="img" aria-label="Sees patients">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <span class="schedule__out" role="img" aria-label="Not in">
+                  &ndash;
+                </span>
+              )}
+            </td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+<p class="meta schedule__summary">
+  {doctors.map((doctor) => `${doctor.name}: ${formatDays(doctor.days)}.`).join(' ')}
+</p>
+
+<style>
+  .schedule {
+    max-width: 40rem;
+  }
+
+  .schedule caption {
+    padding-bottom: var(--space-3);
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .schedule__day {
+    text-align: center !important;
+    width: 3.5rem;
+    padding-inline: var(--space-1) !important;
+  }
+
+  .schedule__in {
+    display: inline-block;
+    color: var(--clinic-teal);
+    stroke-width: 3;
+  }
+
+  .schedule__out {
+    color: var(--text-soft);
+  }
+
+  .schedule__summary {
+    margin-top: var(--space-3);
+  }
+
+  @media (max-width: 30rem) {
+    .schedule__day {
+      width: 2.6rem;
+      font-size: var(--text-sm);
+    }
+
+    .schedule tbody th {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

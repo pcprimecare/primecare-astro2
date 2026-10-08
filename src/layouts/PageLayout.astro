@@ -1,0 +1,73 @@
+---
+/**
+ * The page frame: header, breadcrumbs, <main>, footer, mobile action bar, and the structured data for the page.
+ * Each page supplies its own <h1> and content through the slot.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileActionBar from '../components/MobileActionBar.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { Faq } from '../data/faq';
+import { updatedFor } from '../data/pages';
+import type { Crumb, Json, PageSchemaInput } from '../lib/schema';
+
+interface Props {
+  /** <title>. Written per page, 30 to 60 characters. */
+  title: string;
+  /** Meta description, 70 to 160 characters, unique per page. */
+  description: string;
+  /** Name for structured data. Usually the h1. */
+  name: string;
+  /** Trail after Home. Leave empty on the home page. */
+  crumbs?: Crumb[];
+  type?: PageSchemaInput['type'];
+  faq?: Faq[];
+  includeServices?: boolean;
+  includeDoctors?: boolean;
+  /** Hide the Book button in the mobile bar (the booking page itself). */
+  onBookPage?: boolean;
+  noindex?: boolean;
+  /** Overrides the date from src/data/pages.ts. */
+  updated?: string;
+  /** For health pages a physician has reviewed (ISO date, and the reviewer's name). */
+  lastReviewed?: string;
+  reviewedBy?: string;
+  extra?: Json[];
+}
+
+const props = Astro.props;
+const path = Astro.url.pathname;
+const updated = props.updated ?? updatedFor(path);
+
+const schema: PageSchemaInput = {
+  path,
+  name: props.name,
+  description: props.description,
+  updated,
+  type: props.type,
+  breadcrumbs: props.crumbs,
+  faq: props.faq,
+  includeServices: props.includeServices,
+  includeDoctors: props.includeDoctors,
+  lastReviewed: props.lastReviewed,
+  reviewedBy: props.reviewedBy,
+  extra: props.extra,
+};
+---
+
+<BaseLayout title={props.title} description={props.description} schema={schema} noindex={props.noindex}>
+  <Header />
+  <main id="main" tabindex="-1">
+    <Breadcrumbs trail={props.crumbs ?? []} />
+    <slot />
+  </main>
+  <Footer updated={updated} />
+  <MobileActionBar hideBook={props.onBookPage} />
+</BaseLayout>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

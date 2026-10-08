@@ -1,0 +1,52 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import ServiceDirectory from '../components/ServiceDirectory.astro';
+import BookingActions from '../components/BookingActions.astro';
+import Faq from '../components/Faq.astro';
+import { clinic } from '../data/clinic';
+import { faqServices } from '../data/faq';
+import { serviceLinks } from '../lib/content';
+
+const title = 'Services and AHCIP Coverage | Primecare Medical Clinic';
+const description =
+  "Family medicine for all ages, driver's medicals, travel advice, vaccinations and skin tag removal in Calgary. See which services AHCIP covers.";
+const links = await serviceLinks();
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Services and what is covered"
+  crumbs={[{ name: 'Services', path: '/services/' }]}
+  faq={faqServices}
+  includeServices
+>
+  <header class="page-head wrap">
+    <h1>Services and what is covered</h1>
+    <p class="lede">
+      We are a family practice for patients of all ages, from newborn to elderly. Each service shows whether Alberta
+      Health Care Insurance (AHCIP) covers it.
+    </p>
+  </header>
+
+  <section class="wrap" aria-label="Services">
+    <ServiceDirectory links={links} level={2} />
+  </section>
+
+  <section class="section section--tint" aria-labelledby="book-title">
+    <div class="wrap">
+      <h2 id="book-title">Book a service</h2>
+      <p>
+        Book a medical appointment online, or call {clinic.phone.display} when the clinic is open. Online requests must
+        be made {clinic.booking.leadTime} in advance. {clinic.booking.notAllOnline}
+      </p>
+      <BookingActions show={['medical', 'call']} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={faqServices} />
+    </div>
+  </section>
+</PageLayout>

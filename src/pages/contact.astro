@@ -1,0 +1,48 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import VisitUs from '../components/VisitUs.astro';
+import Faq from '../components/Faq.astro';
+import { clinic } from '../data/clinic';
+import { faqContact } from '../data/faq';
+
+const title = 'Contact and Hours | Primecare Medical Clinic, Calgary';
+const description = `Primecare Medical Clinic, 315 17 Avenue SW, Calgary. Open Monday to Friday, 9 am to 12 pm and 1 pm to 5 pm. Phone ${clinic.phone.display}. We do not use email.`;
+const policy = clinic.emailPolicy;
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Contact us"
+  type="ContactPage"
+  crumbs={[{ name: 'Contact', path: '/contact/' }]}
+  faq={faqContact}
+>
+  <header class="page-head wrap">
+    <h1>Contact us</h1>
+    <p class="lede">
+      Call us at {clinic.phone.display} when the clinic is open. We are at {clinic.address.street}, {clinic.address.city}.
+    </p>
+  </header>
+
+  <section class="section section--tight section--tint">
+    <div class="wrap">
+      <VisitUs title="Find us" />
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="email-title">
+    <h2 id="email-title">{policy.title}</h2>
+    <p>{policy.intro}</p>
+    <ul class="checklist">
+      {policy.topics.map((topic) => <li>{topic}</li>)}
+    </ul>
+    <p>{policy.outro}</p>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap">
+      <Faq items={faqContact} />
+    </div>
+  </section>
+</PageLayout>

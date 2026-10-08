@@ -1,0 +1,49 @@
+---
+/**
+ * The ways to book: medical (Medeo), rejuvenation (Jane), or call. One primary button per screen:
+ * the medical booking. Labels name the exact action. Links open in the same tab so the Back button works.
+ * No icons: the words already say it, and icons make long labels wrap awkwardly on small screens.
+ */
+import { clinic } from '../data/clinic';
+
+type Action = 'medical' | 'rejuvenation' | 'call';
+
+interface Props {
+  show?: Action[];
+}
+
+const { show = ['medical', 'rejuvenation', 'call'] } = Astro.props;
+---
+
+<div class="btn-row actions">
+  {
+    show.includes('medical') && (
+      <a class="btn btn--primary" href={clinic.booking.medical.url}>
+        {clinic.booking.medical.label}
+      </a>
+    )
+  }
+  {
+    show.includes('rejuvenation') && (
+      <a class="btn btn--rejuvenation" href={clinic.booking.rejuvenation.url}>
+        {clinic.booking.rejuvenation.label}
+      </a>
+    )
+  }
+  {
+    show.includes('call') && (
+      <a class="btn btn--ghost" href={clinic.phone.href}>
+        Call <span class="figures figures--bold">{clinic.phone.display}</span>
+      </a>
+    )
+  }
+</div>
+
+<style>
+  @media (max-width: 36rem) {
+    .actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

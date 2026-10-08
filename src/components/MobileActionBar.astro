@@ -1,0 +1,58 @@
+---
+/**
+ * A fixed Call / Book bar for small screens only. The page reserves room for it (global.css adds
+ * padding-bottom and scroll-padding-bottom), so it never covers content or a focused control.
+ */
+import Icon from './Icon.astro';
+import { clinic } from '../data/clinic';
+
+interface Props {
+  /** Hide the Book button on the booking page itself. */
+  hideBook?: boolean;
+}
+
+const { hideBook = false } = Astro.props;
+---
+
+<nav class:list={['action-bar', 'no-print', { 'action-bar--single': hideBook }]} aria-label="Call or book">
+  <a class="btn btn--ghost" href={clinic.phone.href}>
+    <Icon name="phone" />
+    <span>Call<span class="visually-hidden"> {clinic.phone.display}</span></span>
+  </a>
+  {
+    !hideBook && (
+      <a class="btn btn--primary" href="/book/">
+        <Icon name="calendar" />
+        <span>
+          Book<span class="visually-hidden"> an appointment</span>
+        </span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .action-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-bar);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    min-height: var(--bar-h);
+    padding: var(--space-3) var(--gutter);
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    background: var(--surface);
+    border-top: 2px solid var(--deep-teal);
+  }
+
+  .action-bar--single {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 56rem) {
+    .action-bar {
+      display: none;
+    }
+  }
+</style>

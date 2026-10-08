@@ -1,0 +1,129 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { clinic } from '../data/clinic';
+import { albertaLinks, healthCanadaLinks } from '../data/links';
+import { liveEntries } from '../lib/content';
+
+const title = 'Health Information and Links | Primecare Medical Clinic';
+const description =
+  'Health information from Health Canada and Alberta Health Services, plus Alberta Health Link 811 and Inform Alberta community services.';
+
+const guides = (await liveEntries('guides')).sort((a, b) => a.data.h1.localeCompare(b.data.h1));
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Health information"
+  crumbs={[{ name: 'Health info', path: '/health-info/' }]}
+>
+  <header class="page-head wrap">
+    <h1>Health information</h1>
+    <p class="lede">
+      Reliable health information and community support in Alberta. {clinic.emergency.call911}
+      {' '}{clinic.emergency.healthLink}
+    </p>
+  </header>
+
+  <div class="wrap info pad-end">
+    {
+      guides.length > 0 && (
+        <section class="info__group" aria-labelledby="guides-title">
+          <h2 id="guides-title">Guides from our clinic</h2>
+          <ul class="info__list" role="list">
+            {guides.map((guide) => (
+              <li>
+                <h3>
+                  <a href={`/health-info/${guide.id}/`}>{guide.data.h1}</a>
+                </h3>
+                <p>{guide.data.lede}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="info__group" aria-labelledby="canada-title">
+      <h2 id="canada-title">Health Canada</h2>
+      <ul class="info__list" role="list">
+        {
+          healthCanadaLinks.map((link) => (
+            <li>
+              <h3>
+                <a href={link.url}>{link.title}</a>
+              </h3>
+              <p>{link.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="info__group" aria-labelledby="alberta-title">
+      <h2 id="alberta-title">Community support in Alberta</h2>
+      <ul class="info__list" role="list">
+        {
+          albertaLinks.map((link) => (
+            <li>
+              <h3>
+                <a href={link.url}>{link.title}</a>
+              </h3>
+              <p>{link.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  .info {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .info__group {
+    display: grid;
+    gap: var(--space-3) var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .info__group h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .info__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .info__list li {
+    max-width: none;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .info__list li:first-child {
+    padding-top: 0;
+  }
+
+  .info__list h3 {
+    margin-bottom: var(--space-1);
+  }
+
+  .info__list p {
+    margin: 0;
+    color: var(--text-soft);
+  }
+
+  @media (min-width: 56rem) {
+    .info__group {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+</style>

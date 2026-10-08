@@ -1,0 +1,90 @@
+---
+/**
+ * The services directory. Not a card grid: a ruled list where each row pairs a service with who pays for it,
+ * because "Covered by AHCIP" / "Not covered by AHCIP" is the fact patients need first and Alberta's physician
+ * college expects advertising to say which services are not publicly funded.
+ *
+ * A row links to its own page only when that page exists and is published (`links`).
+ */
+import CoverageTag from './CoverageTag.astro';
+import { services } from '../data/services';
+
+interface Props {
+  /** Service id -> path of its detail page, for pages that are published. */
+  links?: Record<string, string>;
+  /** Heading level for each service name: 3 under an h2 section, 2 directly under the page's h1. */
+  level?: 2 | 3;
+}
+
+const { links = {}, level = 3 } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
+const hrefFor = (id: string) => (id === 'rejuvenation' ? '/rejuvenation/' : links[id]);
+---
+
+<ul class="directory" role="list">
+  {
+    services.map((service) => {
+      const href = hrefFor(service.id);
+      return (
+        <li class="directory__row" id={service.id}>
+          <div>
+            <Heading class="directory__name">{href ? <a href={href}>{service.name}</a> : service.name}</Heading>
+            <p class="directory__summary">{service.summary}</p>
+          </div>
+          <CoverageTag coverage={service.coverage} />
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .directory {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .directory__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-3) var(--space-6);
+    align-items: start;
+    max-width: none;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .directory__name {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-md);
+  }
+
+  .directory__name a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+  }
+
+  .directory__name a:hover {
+    color: var(--clinic-teal);
+    text-decoration-thickness: 0.14em;
+  }
+
+  .directory__summary {
+    margin: 0;
+    color: var(--text-soft);
+  }
+
+  .directory__row :global(.coverage) {
+    justify-self: start;
+  }
+
+  @media (max-width: 40rem) {
+    .directory__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

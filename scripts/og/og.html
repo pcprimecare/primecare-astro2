@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<title>Primecare social preview image</title>
+<!--
+  Source for public/og/primecare-og.png (1200 x 630), the image shown when a page is shared or summarised.
+  Render it with headless Chrome, using the real site fonts:
+    chrome --headless=new --hide-scrollbars --window-size=1200,630 --virtual-time-budget=8000 --screenshot=og.png file:///.../scripts/og/og.html
+  Then: node scripts/finish-og.mjs   (crops to exactly 1200x630 and writes public/og/primecare-og.png)
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&family=Literata:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --deep-teal:#0d3b3d; --logo-teal:#1a9a94; --champagne:#ead9a8; --white:#fff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1200px; height: 630px; background: var(--deep-teal); }
+  body { position: relative; overflow: hidden; color: var(--white); font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif; }
+  .bar { position: absolute; inset: 0 auto 0 0; width: 18px; background: var(--logo-teal); }
+  .mark { position: absolute; left: 96px; top: 76px; width: 84px; height: 84px; }
+  .name { position: absolute; left: 204px; top: 96px; font-family: 'Literata', Georgia, serif; font-weight: 700; font-size: 44px; line-height: 1.1; }
+  .name small { display: block; margin-top: 6px; font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif; font-weight: 400; font-size: 28px; color: var(--champagne); }
+  h1 { position: absolute; left: 96px; top: 232px; width: 960px; margin: 0; font-family: 'Literata', Georgia, serif; font-weight: 700; font-size: 84px; line-height: 1.08; letter-spacing: -0.01em; }
+  .foot { position: absolute; left: 96px; bottom: 64px; font-size: 34px; line-height: 1.4; }
+  .foot strong { font-weight: 700; }
+  .foot span { color: var(--champagne); font-family: 'Literata', Georgia, serif; font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="bar"></div>
+  <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+    <rect width="64" height="64" rx="12" fill="#fff" fill-opacity="0.08"/>
+    <path d="M26 12h12v14h14v12H38v14H26V38H12V26h14z" fill="#ffffff"/>
+    <path d="M10 52c8 7 26 7 44-6" fill="none" stroke="#1a9a94" stroke-width="4.5" stroke-linecap="round"/>
+  </svg>
+  <div class="name">Primecare Medical Clinic<small>Caring for better</small></div>
+  <h1>Family medicine and rejuvenation</h1>
+  <div class="foot"><strong>315 17 Avenue SW, Calgary</strong><br><span>Call 403-398-5449</span></div>
+</body>
+</html>

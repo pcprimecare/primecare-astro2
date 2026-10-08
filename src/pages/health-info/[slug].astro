@@ -1,0 +1,17 @@
+---
+import { render } from 'astro:content';
+import DetailPage from '../../components/DetailPage.astro';
+import { liveEntries } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const entries = await liveEntries('guides');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<DetailPage entry={entry} section={{ name: 'Health info', path: '/health-info/' }}>
+  <Content />
+</DetailPage>

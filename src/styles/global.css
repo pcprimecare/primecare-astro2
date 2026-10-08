@@ -1,0 +1,412 @@
+@import './tokens.css';
+
+/* ---------- Reset and base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Keep a focused control clear of the fixed mobile bar (WCAG 2.2 Focus Not Obscured). */
+  scroll-padding-block: var(--space-5) var(--space-5);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-heading, Georgia, serif);
+  font-weight: 650;
+  line-height: var(--leading-heading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: var(--text-xl);
+}
+
+h3 {
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+p,
+ul,
+ol,
+dl,
+table,
+figure,
+address {
+  margin: 0 0 var(--space-4);
+}
+
+address {
+  font-style: normal;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+p,
+li {
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration-thickness: 0.14em;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+/* Visible keyboard focus everywhere (3px, with a gap so it never merges with the control). */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--focus-inverse);
+}
+
+::selection {
+  background: var(--champagne);
+  color: var(--deep-teal);
+}
+
+/* ---------- Layout primitives ---------- */
+.wrap {
+  width: min(100% - 2 * var(--gutter), var(--wrap));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tint {
+  background: var(--surface-tint);
+}
+
+.section--tight {
+  padding-block: calc(var(--section-y) * 0.6);
+}
+
+.page-head {
+  padding-block: var(--space-6) var(--space-6);
+}
+
+.page-head h1 {
+  margin-bottom: var(--space-4);
+}
+
+.lede {
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 60ch;
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: var(--text-soft);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+  Phone numbers and times are set in the heading face. Atkinson Hyperlegible, the body face, slashes its zero
+  to tell it from the letter O. That is right for reading text, but it makes "403-398-5449" and "9:00" look
+  technical in the places patients look first.
+*/
+.figures {
+  font-family: var(--font-heading, Georgia, serif);
+  font-weight: 500;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.figures--bold {
+  font-weight: 700;
+}
+
+/* Space at the end of a page whose last element is not a full-width section. */
+.pad-end {
+  padding-bottom: var(--section-y);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.stack > * + * {
+  margin-top: var(--space-4);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3rem;
+  padding: 0.7rem 1.25rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-control);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--clinic-teal);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: var(--deep-teal);
+  color: var(--white);
+}
+
+.btn--rejuvenation {
+  background: var(--champagne);
+  color: var(--deep-teal);
+  border-color: var(--deep-teal);
+}
+
+.btn--rejuvenation:hover {
+  background: #dfc98a;
+  color: var(--deep-teal);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--clinic-teal);
+  border-color: var(--clinic-teal);
+}
+
+.btn--ghost:hover {
+  background: var(--surface-tint);
+  color: var(--deep-teal);
+  border-color: var(--deep-teal);
+}
+
+.on-dark .btn--primary {
+  background: var(--white);
+  color: var(--deep-teal);
+}
+
+.on-dark .btn--primary:hover {
+  background: var(--champagne);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* ---------- Icons ---------- */
+.icon {
+  flex: none;
+  width: 1.25em;
+  height: 1.25em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Tables ---------- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+.table thead th {
+  border-bottom: 2px solid var(--rule-strong);
+  font-weight: 700;
+}
+
+.table tbody th {
+  font-weight: 700;
+}
+
+/* ---------- Prose helpers ---------- */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose h2 {
+  margin-top: var(--space-6);
+  font-size: var(--text-lg);
+}
+
+.prose h3 {
+  margin-top: var(--space-5);
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: var(--space-2);
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.55em;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--logo-teal);
+  border-radius: 50%;
+}
+
+/*
+  Small screens: leave room for the fixed Call / Book bar. The footer adds the matching padding at the very end of the
+  page (see Footer.astro), and scroll-padding keeps a focused control clear of the bar (WCAG 2.2 Focus Not Obscured).
+*/
+@media (max-width: 55.99rem) {
+  html {
+    scroll-padding-bottom: calc(var(--bar-h) + var(--space-6) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ---------- Motion preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Windows high-contrast / forced colours ---------- */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline-color: Highlight;
+  }
+
+  .btn {
+    border-color: ButtonText;
+  }
+}
+
+/* ---------- Print: forms and contact details get printed ---------- */
+@media print {
+  :root {
+    --text: #000;
+    --text-soft: #000;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+
+  /* Interactive things mean nothing on paper. The address, phone and hours are printed as text. */
+  .no-print,
+  .site-header,
+  .action-bar,
+  .skip-link,
+  .map,
+  .btn {
+    display: none !important;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .site-footer {
+    background: none !important;
+    color: #000 !important;
+  }
+}

@@ -1,0 +1,121 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import BookingActions from '../components/BookingActions.astro';
+import HoursTable from '../components/HoursTable.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { clinic } from '../data/clinic';
+import { faqBook } from '../data/faq';
+
+const title = 'Book an Appointment | Primecare Medical Clinic, Calgary';
+const description = `Book a medical or rejuvenation appointment at Primecare Medical Clinic in Calgary. Book online 2 or more business days ahead, or call ${clinic.phone.display}.`;
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Book an appointment"
+  crumbs={[{ name: 'Book an appointment', path: '/book/' }]}
+  faq={faqBook}
+  onBookPage
+>
+  <header class="page-head wrap">
+    <h1>Book an appointment</h1>
+    <p class="lede">
+      Book online for a medical appointment or a rejuvenation appointment, or call {clinic.phone.display} when the
+      clinic is open.
+    </p>
+  </header>
+
+  <section class="section section--tight wrap" aria-labelledby="how-title">
+    <h2 id="how-title">How booking works</h2>
+    <ul class="checklist">
+      <li>Online appointment requests must be made {clinic.booking.leadTime} in advance.</li>
+      <li>{clinic.booking.notAllOnline}</li>
+      <li>
+        For an earlier appointment, or if you do not find the right time, call {clinic.phone.display} when the clinic
+        is open.
+      </li>
+      <li>We do not book or cancel appointments by email.</li>
+    </ul>
+  </section>
+
+  <section class="section section--tint" aria-labelledby="choose-title">
+    <div class="wrap choices">
+      <h2 id="choose-title">Choose your appointment</h2>
+
+      <div class="choice">
+        <h3>Medical appointment</h3>
+        <p>
+          Family medicine and other medical services. The button opens the {clinic.booking.medical.provider} booking site.
+        </p>
+        <BookingActions show={['medical']} />
+      </div>
+
+      <div class="choice">
+        <h3>Rejuvenation and aesthetics appointment</h3>
+        <p>
+          Botox and fillers, laser, skin tightening and skin rejuvenation. These treatments are not covered by AHCIP.
+          The button opens the {clinic.booking.rejuvenation.provider} booking site.
+        </p>
+        <BookingActions show={['rejuvenation']} />
+      </div>
+
+      <div class="choice">
+        <h3>Prefer to call?</h3>
+        <p>
+          <a class="choice__phone figures figures--bold" href={clinic.phone.href}>
+            <Icon name="phone" />
+            {clinic.phone.display}
+          </a>
+        </p>
+        <HoursTable />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={faqBook} />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .choices {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .choice {
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .choice h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-lg);
+  }
+
+  .choice__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 56rem) {
+    .choices {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--space-6);
+    }
+
+    .choices h2 {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+  }
+</style>

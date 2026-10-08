@@ -1,0 +1,11 @@
+---
+import { serializeGraph, type Json } from '../lib/schema';
+
+interface Props {
+  graph: Json;
+}
+
+const { graph } = Astro.props;
+---
+
+<script type="application/ld+json" is:inline set:html={serializeGraph(graph)} />

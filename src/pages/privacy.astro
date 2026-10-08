@@ -1,0 +1,59 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { clinic } from '../data/clinic';
+
+const title = 'Privacy | Primecare Medical Clinic, Calgary';
+const description =
+  'What the Primecare Medical Clinic website does and does not do with your information, and how to ask about your health information.';
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Privacy"
+  crumbs={[{ name: 'Privacy', path: '/privacy/' }]}
+>
+  <header class="page-head wrap">
+    <h1>Privacy</h1>
+    <p class="lede">
+      This page explains what this website does with your information. It covers the website only, not patient health
+      records.
+    </p>
+  </header>
+
+  <div class="wrap pad-end"><div class="prose">
+    <h2>What this website collects</h2>
+    <p>
+      This website does not use cookies, advertising trackers or analytics, and it has no forms. We do not collect
+      personal information through it.
+    </p>
+
+    <h2>Technical information</h2>
+    <p>
+      Our website host and network provider, Cloudflare, processes technical information such as your IP address when
+      you load a page. This lets the site be delivered and protected from abuse.
+    </p>
+
+    <h2>The map</h2>
+    <p>
+      The map on the Contact page loads from Google only when you choose to show it. Google receives your IP address
+      and may set cookies.
+    </p>
+
+    <h2>Online booking</h2>
+    <p>
+      Online booking is provided by {clinic.booking.medical.provider} for medical appointments and
+      {' '}{clinic.booking.rejuvenation.provider} for rejuvenation appointments. When you follow a booking link you leave
+      this website, and that provider's privacy policy applies to the information you enter.
+    </p>
+
+    <h2>Email</h2>
+    <p>We do not use email to communicate with patients. See the <a href="/contact/">Contact page</a>.</p>
+
+    <h2>Your health information</h2>
+    <p>
+      Doctors at the clinic collect and keep patient health information under Alberta's Health Information Act. To ask
+      about your own health information, call the clinic at <a href={clinic.phone.href}>{clinic.phone.display}</a>.
+    </p>
+  </div></div>
+</PageLayout>

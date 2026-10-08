@@ -1,0 +1,128 @@
+---
+/**
+ * Template for the approval-gated pages (src/content/*). Drafts only exist in `npm run dev`, where a banner lists
+ * what the clinic must confirm before the page can be published.
+ */
+import type { CollectionEntry } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import BookingActions from './BookingActions.astro';
+import CoverageTag from './CoverageTag.astro';
+import Faq from './Faq.astro';
+import { formatDate } from '../data/pages';
+
+interface Props {
+  entry: CollectionEntry<'services'> | CollectionEntry<'rejuvenation'> | CollectionEntry<'guides'>;
+  /** The parent section, for the breadcrumb trail. */
+  section: { name: string; path: string };
+}
+
+const { entry, section } = Astro.props;
+const data = entry.data;
+const iso = (date: Date) => date.toISOString().slice(0, 10);
+const here = `${section.path}${entry.id}/`;
+const reviewed = data.lastReviewed ? iso(data.lastReviewed) : undefined;
+const showDraftBanner = import.meta.env.DEV && data.draft;
+---
+
+<PageLayout
+  title={data.title}
+  description={data.description}
+  name={data.h1}
+  crumbs={[section, { name: data.h1, path: here }]}
+  faq={data.faq}
+  updated={iso(data.updated)}
+  type={reviewed ? 'MedicalWebPage' : 'WebPage'}
+  lastReviewed={reviewed}
+  reviewedBy={data.reviewedBy}
+>
+  {
+    showDraftBanner && (
+      <aside class="draft wrap" role="note">
+        <p>
+          <strong>Draft, not published.</strong> This page is visible only while developing. A physician must approve
+          it before it goes live.
+        </p>
+        {data.reviewNotes.length > 0 && (
+          <ul>
+            {data.reviewNotes.map((note) => (
+              <li>{note}</li>
+            ))}
+          </ul>
+        )}
+      </aside>
+    )
+  }
+
+  <header class="page-head wrap">
+    <h1>{data.h1}</h1>
+    <p class="lede">{data.lede}</p>
+    {data.coverage && <CoverageTag coverage={data.coverage} />}
+  </header>
+
+  <div class="wrap">
+    <div class="prose">
+      <slot />
+    </div>
+
+    {
+      reviewed && (
+        <p class="meta">
+          Reviewed by {data.reviewedBy} on <time datetime={reviewed}>{formatDate(reviewed)}</time>.
+        </p>
+      )
+    }
+
+    {
+      data.sources.length > 0 && (
+        <section class="sources" aria-labelledby="sources-title">
+          <h2 id="sources-title">Sources</h2>
+          <ul>
+            {data.sources.map((source) => (
+              <li>
+                <a href={source.url}>{source.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="booking">
+      <BookingActions show={[data.booking === 'rejuvenation' ? 'rejuvenation' : 'medical', 'call']} />
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={data.faq} />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .draft {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    background: var(--champagne);
+    color: var(--deep-teal);
+    border-left: 6px solid var(--deep-teal);
+  }
+
+  .draft p,
+  .draft ul {
+    max-width: none;
+    margin: 0 0 var(--space-2);
+  }
+
+  .sources {
+    margin-top: var(--space-6);
+  }
+
+  .sources h2 {
+    font-size: var(--text-lg);
+  }
+
+  .booking {
+    margin-top: var(--space-6);
+  }
+</style>

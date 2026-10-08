@@ -1,0 +1,74 @@
+---
+/**
+ * A map that loads only when the visitor asks. No third-party request, cookie or layout cost until then,
+ * which keeps the page fast and private. Without JavaScript the "Get directions" links beside it still work.
+ */
+import Icon from './Icon.astro';
+import { clinic } from '../data/clinic';
+
+const frameTitle = `Map showing ${clinic.name} at ${clinic.address.street}, ${clinic.address.city}`;
+---
+
+<div class="map" data-map data-src={clinic.maps.embedUrl} data-title={frameTitle}>
+  <div class="map__placeholder">
+    <p class="map__address">
+      <strong>{clinic.address.street}</strong><br />
+      {clinic.address.city}, {clinic.address.regionName}
+    </p>
+    <button class="btn btn--ghost" type="button" data-map-load>
+      <Icon name="map-pin" />
+      Show map
+    </button>
+    <p class="meta">The map loads from Google when you choose to show it. Google may set cookies.</p>
+  </div>
+</div>
+
+<script>
+  const map = document.querySelector<HTMLElement>('[data-map]');
+  const button = map?.querySelector<HTMLButtonElement>('[data-map-load]');
+
+  button?.addEventListener('click', () => {
+    if (!map?.dataset.src) return;
+    const frame = document.createElement('iframe');
+    frame.src = map.dataset.src;
+    frame.title = map.dataset.title ?? 'Map';
+    frame.className = 'map__frame';
+    frame.referrerPolicy = 'no-referrer-when-downgrade';
+    map.replaceChildren(frame);
+    frame.focus();
+  });
+</script>
+
+<style>
+  /*
+    Do not put aspect-ratio on this box: with a min-height it turns into a minimum WIDTH (4/3 of 16rem = 341px),
+    which pushes the page wider than a 320px screen. The ratio belongs on the iframe, which has a definite width.
+  */
+  .map {
+    min-width: 0;
+    background: var(--surface-tint);
+    border: 1px solid var(--rule);
+  }
+
+  .map__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-4);
+    min-height: 16rem;
+    padding: var(--space-5);
+  }
+
+  .map__placeholder p {
+    margin: 0;
+  }
+
+  .map :global(.map__frame) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    min-height: 16rem;
+    border: 0;
+  }
+</style>

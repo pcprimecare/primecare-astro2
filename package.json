@@ -1,0 +1,40 @@
+{
+  "name": "primecare-astro2",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Primecare Medical Clinic, Calgary. Static Astro site built for search engines and AI assistants.",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "node scripts/make-redirects.mjs",
+    "build": "astro check && astro build",
+    "build:fast": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "check:seo": "node scripts/validate-seo.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "test:hours": "node --test scripts/hours.test.mjs",
+    "verify": "npm run check:contrast && npm run test:hours && npm run build && npm run check:seo",
+    "qa:shots": "node scripts/qa/qa.mjs shots",
+    "qa:a11y": "node scripts/qa/qa.mjs a11y",
+    "qa:keyboard": "node scripts/qa/qa.mjs keyboard",
+    "qa:metrics": "node scripts/qa/qa.mjs metrics",
+    "qa:modes": "node scripts/qa/qa.mjs modes"
+  },
+  "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.3",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.8",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "axe-core": "^4.14.0",
+    "cheerio": "^1.2.0",
+    "puppeteer-core": "^25.13.0",
+    "typescript": "~5.9.3"
+  }
+}

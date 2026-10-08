@@ -1,0 +1,26 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { clinic } from '../data/clinic';
+import { bookNav, primaryNav } from '../data/nav';
+
+const title = 'Page Not Found | Primecare Medical Clinic, Calgary';
+const description =
+  'That page does not exist or has moved. Use the links to find services, book an appointment or contact Primecare Medical Clinic.';
+---
+
+<PageLayout title={title} description={description} name="Page not found" noindex>
+  <header class="page-head wrap">
+    <h1>We could not find that page</h1>
+    <p class="lede">
+      The page may have moved. Try one of these, or call us at <a href={clinic.phone.href}>{clinic.phone.display}</a>.
+    </p>
+  </header>
+
+  <div class="wrap pad-end">
+    <ul class="checklist">
+      <li><a href="/">Home</a></li>
+      <li><a href={bookNav.href}>{bookNav.label}</a></li>
+      {primaryNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+    </ul>
+  </div>
+</PageLayout>

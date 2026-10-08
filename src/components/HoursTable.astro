@@ -1,0 +1,109 @@
+---
+/** Clinic hours as a real table, built from the same data as the structured data and the "open now" panel. */
+import { clinic } from '../data/clinic';
+import { formatDays } from '../lib/format';
+import { formatTime } from '../lib/hours';
+
+interface Props {
+  /** For dark backgrounds. */
+  inverse?: boolean;
+  /** Label above the times instead of beside them. Use in narrow places such as the "Today" panel and the footer. */
+  stacked?: boolean;
+}
+
+const { inverse = false, stacked = false } = Astro.props;
+const openDays = formatDays(clinic.hours.openDays);
+const periods = clinic.hours.periods;
+---
+
+<table class:list={['table', 'hours', { 'hours--inverse': inverse, 'hours--stacked': stacked }]}>
+  <caption class="visually-hidden">Clinic hours</caption>
+  <tbody>
+    <tr>
+      <th scope="row">{openDays}</th>
+      <td class="figures">
+        {
+          periods.map((period, index) => (
+            <>
+              {index > 0 && <span class="visually-hidden"> and </span>}
+              <span class="hours__period">
+                <time datetime={period.open}>{formatTime(period.open)}</time> to{' '}
+                <time datetime={period.close}>{formatTime(period.close)}</time>
+              </span>
+            </>
+          ))
+        }
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Weekends and statutory holidays</th>
+      <td>Closed</td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  .hours {
+    margin-bottom: 0;
+  }
+
+  .hours th {
+    width: 42%;
+    padding-right: var(--space-4);
+  }
+
+  /* Each period on its own line, never broken in the middle of a time. */
+  .hours__period {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .hours--inverse th,
+  .hours--inverse td {
+    border-bottom-color: color-mix(in srgb, var(--white) 28%, transparent);
+  }
+
+  .hours--stacked th,
+  .hours--stacked td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .hours--stacked th {
+    padding-top: var(--space-3);
+  }
+
+  .hours--stacked td {
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hours--stacked.hours--inverse td {
+    border-bottom-color: color-mix(in srgb, var(--white) 28%, transparent);
+  }
+
+  @media (max-width: 30rem) {
+    .hours th,
+    .hours td {
+      display: block;
+      width: auto;
+      padding: 0;
+      border: 0;
+    }
+
+    .hours th {
+      padding-top: var(--space-3);
+    }
+
+    .hours td {
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hours--inverse td {
+      border-bottom-color: color-mix(in srgb, var(--white) 28%, transparent);
+    }
+  }
+</style>

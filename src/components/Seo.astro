@@ -1,0 +1,47 @@
+---
+/**
+ * Everything in <head> that search engines and link previews read, in one place.
+ * One instance per page, so nothing is duplicated. Title and description are written per page
+ * (the lint in scripts/validate-seo.mjs checks they are unique and the right length).
+ */
+import { clinic } from '../data/clinic';
+import { OG_IMAGE, absoluteUrl } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path with leading and trailing slash, for example "/services/". */
+  path: string;
+  noindex?: boolean;
+}
+
+const { title, description, path, noindex = false } = Astro.props;
+const canonical = absoluteUrl(path);
+const image = absoluteUrl(OG_IMAGE.path);
+const robots = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={robots} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:site_name" content={clinic.name} />
+<meta property="og:locale" content="en_CA" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content={String(OG_IMAGE.width)} />
+<meta property="og:image:height" content={String(OG_IMAGE.height)} />
+<meta property="og:image:alt" content={OG_IMAGE.alt} />
+<meta name="twitter:card" content="summary_large_image" />
+
+<meta name="theme-color" content="#0d3b3d" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />

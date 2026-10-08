@@ -1,0 +1,41 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { clinic } from '../data/clinic';
+
+const title = 'Accessibility | Primecare Medical Clinic, Calgary';
+const description =
+  'How the Primecare Medical Clinic website is built so everyone can use it, and who to call if something does not work for you.';
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Accessibility"
+  crumbs={[{ name: 'Accessibility', path: '/accessibility/' }]}
+>
+  <header class="page-head wrap">
+    <h1>Accessibility</h1>
+    <p class="lede">
+      We want everyone to be able to use this website. It is designed to meet the Web Content Accessibility Guidelines
+      (WCAG) 2.2, level AA.
+    </p>
+  </header>
+
+  <div class="wrap pad-end"><div class="prose">
+    <h2>What we did</h2>
+    <ul class="checklist">
+      <li>Text is large (18 pixels or more) and has high contrast against its background.</li>
+      <li>You can use the whole site with a keyboard, and the focus outline is always visible.</li>
+      <li>Buttons and links are large enough to tap.</li>
+      <li>The site works on small screens and at 200% zoom.</li>
+      <li>Motion is turned off if your device is set to reduce motion.</li>
+      <li>Every image has a text description, and information is never shown by colour alone.</li>
+    </ul>
+
+    <h2>If something does not work for you</h2>
+    <p>
+      Call us at <a href={clinic.phone.href}>{clinic.phone.display}</a> when the clinic is open and we will help you
+      book an appointment or find the information you need. Tell us what did not work so we can fix it.
+    </p>
+  </div></div>
+</PageLayout>

@@ -1,0 +1,160 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import BookingActions from '../components/BookingActions.astro';
+import OpenStatus from '../components/OpenStatus.astro';
+import HoursTable from '../components/HoursTable.astro';
+import ServiceDirectory from '../components/ServiceDirectory.astro';
+import DoctorSchedule from '../components/DoctorSchedule.astro';
+import VisitUs from '../components/VisitUs.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { clinic } from '../data/clinic';
+import { faqHome } from '../data/faq';
+
+const title = 'Family Doctors in Calgary | Primecare Medical Clinic';
+const description = `Family practice and rejuvenation clinic at 315 17 Avenue SW, Calgary. Patients from newborn to elderly, by appointment. Book online or call ${clinic.phone.display}.`;
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Primecare Medical Clinic, family doctors in Calgary"
+  faq={faqHome}
+  includeServices
+  includeDoctors
+>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero__copy">
+      <h1 id="hero-title">Family medicine and rejuvenation on 17 Avenue SW, Calgary</h1>
+      <p class="lede">
+        {clinic.name} is a family practice for patients from newborn to elderly. Our doctors treat minor injuries and
+        illnesses and refer patients to specialists. We also offer rejuvenation and aesthetic treatments. Patients are
+        seen by appointment.
+      </p>
+      <BookingActions />
+      <p class="meta hero__rule">
+        Online requests must be made {clinic.booking.leadTime} in advance. {clinic.booking.notAllOnline}
+      </p>
+    </div>
+
+    <aside class="today on-dark" aria-labelledby="today-title">
+      <h2 id="today-title"><span data-today-label>Clinic hours</span></h2>
+      <OpenStatus />
+      <HoursTable inverse stacked />
+      <p class="today__phone">
+        <a class="figures figures--bold" href={clinic.phone.href}>
+          <Icon name="phone" />
+          {clinic.phone.display}
+        </a>
+      </p>
+      <address>{clinic.address.street}, {clinic.address.city}</address>
+    </aside>
+  </section>
+
+  <section class="section section--tint" aria-labelledby="services-title">
+    <div class="wrap">
+      <h2 id="services-title">Services and what is covered</h2>
+      <p class="lede">
+        We are a family practice for patients of all ages. Every service shows whether Alberta Health Care Insurance
+        (AHCIP) covers it.
+      </p>
+      <ServiceDirectory />
+      <p class="section__more"><a class="btn btn--ghost" href="/services/">See services and coverage</a></p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="doctors-title">
+    <div class="wrap">
+      <h2 id="doctors-title">Our doctors</h2>
+      <p class="lede">Our doctors see patients on set days.</p>
+      <DoctorSchedule />
+      <p class="section__more"><a class="btn btn--ghost" href="/doctors/">Meet our doctors</a></p>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap">
+      <VisitUs />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={faqHome} />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+    padding-block: var(--space-6) var(--section-y);
+  }
+
+  .hero__copy h1 {
+    margin-bottom: var(--space-5);
+  }
+
+  .hero__copy .lede {
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__rule {
+    margin: var(--space-5) 0 0;
+  }
+
+  /* The one bold element on the page: today's hours, on the clinic's deep teal. */
+  .today {
+    padding: var(--space-6);
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
+    border-top: 6px solid var(--logo-teal);
+    --status-soft: var(--text-inverse-soft);
+  }
+
+  .today h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--text-md);
+  }
+
+  .today :global(a) {
+    color: var(--text-inverse);
+  }
+
+  .today :global(a:hover) {
+    color: var(--champagne);
+  }
+
+  .today__phone {
+    margin: var(--space-5) 0 var(--space-2);
+  }
+
+  .today__phone a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .today address {
+    margin: 0;
+    color: var(--text-inverse-soft);
+  }
+
+  .section__more {
+    margin: var(--space-6) 0 0;
+  }
+
+  @media (min-width: 56rem) {
+    .hero {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-8);
+      padding-top: var(--space-7);
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import DoctorSchedule from '../components/DoctorSchedule.astro';
+import BookingActions from '../components/BookingActions.astro';
+import Faq from '../components/Faq.astro';
+import { clinic } from '../data/clinic';
+import { doctors } from '../data/doctors';
+import { faqDoctors } from '../data/faq';
+import { joinList } from '../lib/format';
+
+const title = 'Our Doctors | Primecare Medical Clinic, Calgary';
+const description = `Doctors at Primecare Medical Clinic in Calgary: ${joinList(doctors.map((d) => d.name))}. See the days each doctor sees patients.`;
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Our doctors"
+  crumbs={[{ name: 'Doctors', path: '/doctors/' }]}
+  faq={faqDoctors}
+  includeDoctors
+>
+  <header class="page-head wrap">
+    <h1>Our doctors</h1>
+    <p class="lede">
+      {joinList(doctors.map((d) => d.name))} see patients at {clinic.name}. Each doctor sees patients on set days.
+    </p>
+  </header>
+
+  <section class="wrap" aria-label="Doctor schedule">
+    <DoctorSchedule />
+  </section>
+
+  <section class="section section--tint" aria-labelledby="book-title">
+    <div class="wrap">
+      <h2 id="book-title">Book with a doctor</h2>
+      <p>
+        Book a medical appointment online, or call {clinic.phone.display} when the clinic is open. Online requests must
+        be made {clinic.booking.leadTime} in advance.
+      </p>
+      <BookingActions show={['medical', 'call']} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={faqDoctors} />
+    </div>
+  </section>
+</PageLayout>

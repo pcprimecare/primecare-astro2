@@ -1,0 +1,132 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import BookingActions from '../components/BookingActions.astro';
+import CoverageTag from '../components/CoverageTag.astro';
+import Faq from '../components/Faq.astro';
+import { clinic } from '../data/clinic';
+import { faqRejuvenation } from '../data/faq';
+import { treatments } from '../data/services';
+import { treatmentLinks } from '../lib/content';
+
+const title = 'Rejuvenation and Aesthetics in Calgary | Primecare';
+const description =
+  'Botox and fillers, laser treatments, microneedling skin tightening and skin rejuvenation at Primecare Medical Clinic, Calgary. Not covered by AHCIP.';
+const links = await treatmentLinks();
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Rejuvenation and aesthetics"
+  crumbs={[{ name: 'Rejuvenation', path: '/rejuvenation/' }]}
+  faq={faqRejuvenation}
+  includeServices
+>
+  <header class="band">
+    <div class="wrap band__inner">
+      <h1>Rejuvenation and aesthetics</h1>
+      <p class="lede">
+        Rejuvenation and aesthetic treatments are available by appointment at our clinic. Treatments use medical
+        devices.
+      </p>
+      <CoverageTag coverage="uninsured" />
+      <BookingActions show={['rejuvenation', 'call']} />
+      <p class="meta">Online requests must be made {clinic.booking.leadTime} in advance.</p>
+    </div>
+  </header>
+
+  <section class="wrap treatments" aria-label="Treatments">
+    {
+      treatments.map((treatment) => (
+        <section class="treatment" id={treatment.id} aria-labelledby={`${treatment.id}-title`}>
+          <h2 id={`${treatment.id}-title`}>
+            {links[treatment.id] ? <a href={links[treatment.id]}>{treatment.name}</a> : treatment.name}
+          </h2>
+          <ul class="checklist">
+            {treatment.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <Faq items={faqRejuvenation} />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  /* Champagne surfaces always carry Deep Teal text. Clinic Teal on Champagne is under 4.5:1, so it is not used here. */
+  .band {
+    margin-top: var(--space-5);
+    padding-block: var(--space-7);
+    background: var(--surface-rejuvenation);
+    color: var(--deep-teal);
+    --text-soft: var(--deep-teal);
+  }
+
+  /* A grid gap spaces the band's children evenly, including the ones rendered by child components. */
+  .band__inner {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+
+  .band__inner > :global(*) {
+    margin: 0;
+  }
+
+  .band :global(a:not(.btn)) {
+    color: var(--deep-teal);
+  }
+
+  .band :global(.btn--rejuvenation) {
+    background: var(--deep-teal);
+    color: var(--champagne);
+    border-color: var(--deep-teal);
+  }
+
+  .band :global(.btn--rejuvenation:hover) {
+    background: var(--clinic-teal);
+    border-color: var(--clinic-teal);
+    color: var(--white);
+  }
+
+  .band :global(.btn--ghost) {
+    color: var(--deep-teal);
+    border-color: var(--deep-teal);
+  }
+
+  .band :global(.btn--ghost:hover) {
+    background: color-mix(in srgb, var(--white) 45%, transparent);
+  }
+
+  .treatments {
+    padding-top: var(--space-5);
+  }
+
+  .treatment {
+    display: grid;
+    gap: var(--space-3) var(--space-7);
+    padding-block: var(--space-6);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .treatment h2 {
+    margin: 0;
+  }
+
+  .treatment .checklist {
+    margin: 0;
+  }
+
+  @media (min-width: 56rem) {
+    .treatment {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+</style>

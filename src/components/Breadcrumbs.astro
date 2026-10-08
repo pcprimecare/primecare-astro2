@@ -1,0 +1,59 @@
+---
+import type { Crumb } from '../lib/schema';
+
+interface Props {
+  /** Trail after Home. The last item is the current page. */
+  trail: Crumb[];
+}
+
+const { trail } = Astro.props;
+---
+
+{
+  trail.length > 0 && (
+    <nav class="crumbs wrap" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <a href="/">Home</a>
+        </li>
+        {trail.map((crumb, index) => (
+          <li>
+            {index === trail.length - 1 ? <span aria-current="page">{crumb.name}</span> : <a href={crumb.path}>{crumb.name}</a>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .crumbs {
+    padding-top: var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: none;
+  }
+
+  .crumbs li + li::before {
+    content: '/';
+    color: var(--text-soft);
+  }
+
+  .crumbs [aria-current='page'] {
+    color: var(--text-soft);
+  }
+</style>

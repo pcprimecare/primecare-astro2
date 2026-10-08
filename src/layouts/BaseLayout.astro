@@ -1,0 +1,37 @@
+---
+/**
+ * The HTML shell: <head> (SEO, fonts, structured data) and <body>. Fonts are self-hosted at build time by
+ * Astro's Fonts API (configured in astro.config.mjs), so the page makes no third-party font requests.
+ */
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import Seo from '../components/Seo.astro';
+import JsonLd from '../components/JsonLd.astro';
+import SkipLink from '../components/SkipLink.astro';
+import { buildGraph, type PageSchemaInput } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  schema: PageSchemaInput;
+  noindex?: boolean;
+}
+
+const { title, description, schema, noindex = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo title={title} description={description} path={schema.path} noindex={noindex} />
+    <Font cssVariable="--font-heading" preload />
+    <Font cssVariable="--font-body" preload />
+    <JsonLd graph={buildGraph(schema)} />
+  </head>
+  <body>
+    <SkipLink />
+    <slot />
+  </body>
+</html>

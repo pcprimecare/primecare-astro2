@@ -1,0 +1,219 @@
+---
+/**
+ * Site header. The mobile menu uses the native Popover API (popovertarget), so it needs no JavaScript:
+ * it opens, closes on Escape or an outside tap, and returns focus to the button by itself.
+ * Browsers without popover support simply see the links inline.
+ */
+import Icon from './Icon.astro';
+import { bookNav, primaryNav } from '../data/nav';
+
+const here = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href="/">
+      <img
+        src="/images/logo/pcmc2022logo.png"
+        width="265"
+        height="32"
+        alt="Primecare Medical Clinic home"
+      />
+    </a>
+
+    <button class="menu-button" type="button" popovertarget="site-menu">
+      <Icon name="menu" />
+      <span>Menu</span>
+    </button>
+
+    <nav id="site-menu" class="site-nav" popover aria-label="Main">
+      <ul>
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={here === item.href ? 'page' : undefined}
+                data-in-section={here !== item.href && here.startsWith(item.href) ? 'true' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="site-nav__book">
+          <a class="btn btn--primary" href={bookNav.href}>{bookNav.label}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: var(--header-h);
+  }
+
+  /* The logo keeps its full size on tablets and up, and is allowed to shrink on very small phones (320px) so the
+     Menu button always fits beside it. */
+  .brand {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    min-width: 0;
+    min-height: 2.75rem;
+  }
+
+  .brand img {
+    display: block;
+    width: 265px;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 265 / 32;
+  }
+
+  .menu-button {
+    display: none;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 3rem;
+    padding: 0 var(--space-4);
+    background: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--deep-teal);
+    border-radius: var(--radius-control);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .menu-button:hover {
+    background: var(--surface-tint);
+  }
+
+  .site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-nav li {
+    max-width: none;
+  }
+
+  .site-nav a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.125rem;
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .site-nav a:not(.btn):hover {
+    color: var(--text);
+    border-bottom-color: var(--logo-teal);
+  }
+
+  .site-nav a[aria-current='page'],
+  .site-nav a[data-in-section='true'] {
+    border-bottom-color: var(--clinic-teal);
+  }
+
+  /* Wide screens (1200px and up, where all seven items fit on one line): the nav is always visible and inline. */
+  @media (min-width: 75rem) {
+    .site-nav[popover] {
+      display: block;
+      position: static;
+      inset: auto;
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      overflow: visible;
+      color: inherit;
+    }
+  }
+
+  /* Everything narrower: a "Menu" button opens a sheet under the header (needs popover support). */
+  @media (max-width: 74.99rem) {
+    @supports selector(:popover-open) {
+      .menu-button {
+        display: inline-flex;
+      }
+
+      .site-nav[popover] {
+        position: absolute;
+        inset: var(--header-h) 0 auto 0;
+        z-index: var(--z-popover);
+        width: auto;
+        height: auto;
+        max-width: none;
+        margin: 0;
+        padding: var(--space-3) var(--gutter) var(--space-5);
+        overflow: visible;
+        background: var(--surface);
+        color: var(--text);
+        border: 0;
+        border-bottom: 2px solid var(--deep-teal);
+      }
+
+      .site-nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+
+      .site-nav a:not(.btn) {
+        display: flex;
+        width: 100%;
+        min-height: 3.25rem;
+        padding-inline: 0;
+        border-bottom: 1px solid var(--rule);
+        font-size: var(--text-md);
+      }
+
+      .site-nav a[aria-current='page'],
+      .site-nav a[data-in-section='true'] {
+        border-bottom-color: var(--rule);
+        color: var(--clinic-teal);
+        text-decoration: underline;
+        text-decoration-thickness: 3px;
+        text-underline-offset: 0.3em;
+      }
+
+      .site-nav__book {
+        margin-top: var(--space-4);
+      }
+
+      .site-nav__book .btn {
+        width: 100%;
+      }
+    }
+  }
+
+  /* Small screens without popover support: wrap the links inline. */
+  @supports not selector(:popover-open) {
+    .site-header__bar {
+      flex-wrap: wrap;
+      padding-block: var(--space-3);
+    }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import PageLayout from '../layouts/PageLayout.astro';
+import Icon from '../components/Icon.astro';
+import { clinic } from '../data/clinic';
+import { formGroups, forms } from '../data/forms';
+import { formatBytes } from '../lib/format';
+
+const title = 'Patient Forms | Primecare Medical Clinic, Calgary';
+const description =
+  'Download patient forms from Primecare Medical Clinic in Calgary: new patient intake, WCB first visit, PHQ-9, PSC, SCARED, Vanderbilt ADHD and more.';
+
+// File sizes are read from public/forms at build time, so the label can never go stale.
+const sizeOf = (file: string): string | null => {
+  try {
+    return formatBytes(fs.statSync(path.join(process.cwd(), 'public', 'forms', file)).size);
+  } catch {
+    return null;
+  }
+};
+
+const groups = formGroups
+  .map((group) => ({
+    ...group,
+    items: forms.filter((form) => form.group === group.id).map((form) => ({ ...form, size: sizeOf(form.file) })),
+  }))
+  .filter((group) => group.items.length > 0);
+---
+
+<PageLayout
+  title={title}
+  description={description}
+  name="Patient forms"
+  crumbs={[{ name: 'Forms', path: '/forms/' }]}
+>
+  <header class="page-head wrap">
+    <h1>Patient forms</h1>
+    <p class="lede">
+      Download these forms as PDF files. Questions about a form? Call {clinic.phone.display} when the clinic is open.
+    </p>
+  </header>
+
+  <div class="wrap forms pad-end">
+    {
+      groups.map((group) => (
+        <section class="form-group" aria-labelledby={`${group.id}-title`}>
+          <h2 id={`${group.id}-title`}>{group.title}</h2>
+          <ul class="form-list" role="list">
+            {group.items.map((form) => (
+              <li>
+                <a class="form-link" href={`/forms/${form.file}`}>
+                  <Icon name="download" />
+                  <span>{form.title}</span>
+                </a>
+                <span class="meta">PDF{form.size ? `, ${form.size}` : ''}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</PageLayout>
+
+<style>
+  .forms {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .form-group {
+    display: grid;
+    gap: var(--space-3) var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .form-group h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .form-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .form-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-4);
+    max-width: none;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .form-list li:first-child {
+    padding-top: 0;
+  }
+
+  .form-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 2.75rem;
+    font-weight: 700;
+  }
+
+  @media (min-width: 56rem) {
+    .form-group {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+</style>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Primecare Medical Clinic">
+  <rect width="64" height="64" rx="12" fill="#0d3b3d"/>
+  <path d="M26 12h12v14h14v12H38v14H26V38H12V26h14z" fill="#ffffff"/>
+  <path d="M10 52c8 7 26 7 44-6" fill="none" stroke="#1a9a94" stroke-width="4.5" stroke-linecap="round"/>
+</svg>

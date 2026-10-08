@@ -1,0 +1,35 @@
+---
+/** The emergency notice. Signal Red marks the one thing that must never be missed. */
+import Icon from './Icon.astro';
+import { clinic } from '../data/clinic';
+---
+
+<div class="notice" role="note">
+  <Icon name="alert" />
+  <p>
+    <strong>{clinic.emergency.call911}</strong>
+    {' '}{clinic.emergency.healthLink}
+  </p>
+</div>
+
+<style>
+  .notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    background: var(--white);
+    color: var(--deep-teal);
+    border-left: 6px solid var(--emergency);
+  }
+
+  .notice :global(.icon) {
+    margin-top: 0.2em;
+    color: var(--emergency);
+  }
+
+  .notice p {
+    margin: 0;
+    max-width: none;
+  }
+</style>

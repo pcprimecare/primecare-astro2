@@ -1,0 +1,69 @@
+---
+/** Address, phone, directions, hours and map. One block, reused on Home and Contact, from the same data. */
+import Icon from './Icon.astro';
+import HoursTable from './HoursTable.astro';
+import MapFacade from './MapFacade.astro';
+import { clinic } from '../data/clinic';
+
+interface Props {
+  /** Heading text. Home uses "Visit us"; Contact uses "Find us". */
+  title?: string;
+}
+
+const { title = 'Visit us' } = Astro.props;
+---
+
+<section class="visit" aria-labelledby="visit-title">
+  <h2 id="visit-title">{title}</h2>
+  <div class="visit__grid">
+    <div class="visit__details">
+      <address>
+        <strong>{clinic.name}</strong><br />
+        {clinic.address.street}<br />
+        {clinic.address.city}, {clinic.address.regionName} {clinic.address.postalCode}
+      </address>
+      <p>
+        <a class="visit__phone figures figures--bold" href={clinic.phone.href}>
+          <Icon name="phone" />
+          {clinic.phone.display}
+        </a>
+      </p>
+      <div class="btn-row visit__directions">
+        <a class="btn btn--ghost" href={clinic.maps.directions.google}>Directions in Google Maps</a>
+        <a class="btn btn--ghost" href={clinic.maps.directions.apple}>Directions in Apple Maps</a>
+      </div>
+      <h3>Hours</h3>
+      <HoursTable />
+    </div>
+    <MapFacade />
+  </div>
+</section>
+
+<style>
+  .visit__grid {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .visit__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .visit__directions {
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 56rem) {
+    .visit__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-7);
+    }
+  }
+</style>

@@ -1,0 +1,80 @@
+/*
+  Design tokens. See design-system/primecare/MASTER.md for the reasoning.
+
+  Colour comes from the clinic's logo (teal and red), tuned so text passes WCAG contrast.
+  `npm run check:contrast` verifies every text pair below against its background.
+  Raw hex values live ONLY in this file; components use the semantic names.
+*/
+:root {
+  color-scheme: light;
+
+  /* Palette (named) */
+  --deep-teal: #0d3b3d; /* text, footer, the "Today" panel */
+  --clinic-teal: #0b6e6e; /* links, primary buttons */
+  --logo-teal: #1a9a94; /* decorative shapes and rules only. Never used for text. */
+  --signal-red: #c81d25; /* the emergency note and the logo only */
+  --porcelain: #f3f8f7; /* tinted sections */
+  --champagne: #ead9a8; /* rejuvenation surfaces, always with --deep-teal text */
+  --white: #ffffff;
+
+  /* Semantic colour */
+  --surface: var(--white);
+  --surface-tint: var(--porcelain);
+  --surface-inverse: var(--deep-teal);
+  --surface-rejuvenation: var(--champagne);
+  --text: var(--deep-teal);
+  --text-soft: #365a5c; /* 7:1 on white and porcelain */
+  --text-inverse: var(--white);
+  --text-inverse-soft: #cfe3e1; /* 9:1 on deep teal */
+  --link: var(--clinic-teal);
+  --link-hover: var(--deep-teal);
+  --rule: #cdd9d8; /* hairlines and table rules (decorative) */
+  --rule-strong: var(--deep-teal);
+  --focus: var(--clinic-teal);
+  --focus-inverse: var(--champagne);
+  --emergency: var(--signal-red);
+
+  /* Type. --font-heading and --font-body are defined by Astro's Fonts API (astro.config.mjs), with metric-matched fallbacks. */
+  --text-sm: 0.9375rem; /* 15px */
+  --text-base: 1.125rem; /* 18px */
+  --text-md: 1.25rem; /* 20px */
+  --text-lg: 1.5rem; /* 24px */
+  --text-xl: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem); /* h2 */
+  --text-2xl: clamp(2rem, 1.5rem + 2.2vw, 3.25rem); /* h1 */
+  --leading-body: 1.6;
+  --leading-heading: 1.15;
+  --measure: 68ch;
+
+  /* Spacing, 4/8 scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --section-y: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+
+  /* Layout */
+  --wrap: 70rem; /* 1120px */
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --header-h: 4.5rem;
+  --bar-h: 4.5rem; /* the fixed Call / Book bar on small screens */
+
+  /* Shape. Layout surfaces are square; only controls are rounded. */
+  --radius-control: 6px;
+
+  /* Layers */
+  --z-raised: 10;
+  --z-header: 20;
+  --z-popover: 40;
+  --z-bar: 100;
+  --z-skip: 1000;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --dur-slow: 400ms;
+}

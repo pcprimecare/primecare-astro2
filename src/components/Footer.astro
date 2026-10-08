@@ -1,0 +1,197 @@
+---
+import Icon from './Icon.astro';
+import HoursTable from './HoursTable.astro';
+import Notice from './Notice.astro';
+import { clinic } from '../data/clinic';
+import { bookNav, legalNav, primaryNav } from '../data/nav';
+import { formatDate } from '../data/pages';
+
+interface Props {
+  /** ISO date this page's content last changed. Same value as the structured data and the sitemap. */
+  updated: string;
+}
+
+const { updated } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer on-dark">
+  <div class="wrap">
+    <div class="site-footer__notice">
+      <Notice />
+    </div>
+
+    <div class="site-footer__grid">
+      <div>
+        <p class="site-footer__name">{clinic.name}</p>
+        <p class="site-footer__tagline">{clinic.tagline}</p>
+        <address>
+          {clinic.address.street}<br />
+          {clinic.address.city}, {clinic.address.regionName} {clinic.address.postalCode}
+        </address>
+        <p>
+          <a class="site-footer__phone figures figures--bold" href={clinic.phone.href}>
+            <Icon name="phone" />
+            {clinic.phone.display}
+          </a>
+        </p>
+      </div>
+
+      <div>
+        <h2 class="site-footer__heading">Hours</h2>
+        <HoursTable inverse stacked />
+      </div>
+
+      <nav aria-label="Footer">
+        <h2 class="site-footer__heading">Pages</h2>
+        <ul class="site-footer__links">
+          {
+            [...primaryNav, bookNav].map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="site-footer__base">
+      <div>
+        <p>&copy; {year} {clinic.name}</p>
+        <p class="site-footer__updated">
+          This page was last updated <time datetime={updated}>{formatDate(updated)}</time>.
+        </p>
+      </div>
+      <ul class="site-footer__legal">
+        {
+          legalNav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={clinic.social.instagram}>
+            <Icon name="instagram" />
+            Instagram
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-7);
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
+    --status-soft: var(--text-inverse-soft);
+  }
+
+  /* The fixed Call / Book bar covers the bottom of the page on small screens, so the footer ends below it. */
+  @media (max-width: 55.99rem) {
+    .site-footer {
+      padding-bottom: calc(var(--space-7) + var(--bar-h) + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  .site-footer a {
+    color: var(--text-inverse);
+  }
+
+  .site-footer a:hover {
+    color: var(--champagne);
+  }
+
+  .site-footer__notice {
+    margin-bottom: var(--space-7);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-7) var(--space-6);
+  }
+
+  .site-footer__name {
+    margin: 0 0 var(--space-1);
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .site-footer__tagline {
+    margin: 0 0 var(--space-4);
+    color: var(--champagne);
+  }
+
+  .site-footer__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    font-size: var(--text-md);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-footer__heading {
+    margin-bottom: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .site-footer__links,
+  .site-footer__legal {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+  }
+
+  .site-footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid color-mix(in srgb, var(--white) 28%, transparent);
+    color: var(--text-inverse-soft);
+  }
+
+  .site-footer__base p {
+    margin: 0;
+  }
+
+  .site-footer__updated {
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-5);
+  }
+
+  .site-footer__legal li {
+    max-width: none;
+  }
+
+  .site-footer__legal a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.5rem;
+  }
+</style>

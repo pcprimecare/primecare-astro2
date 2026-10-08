@@ -1,0 +1,95 @@
+---
+/**
+ * Questions people actually ask, answered in plain text. The same items feed the FAQPage JSON-LD
+ * (see PageLayout), so the visible answer and the structured answer are identical.
+ */
+import type { Faq } from '../data/faq';
+
+interface Props {
+  items: Faq[];
+  title?: string;
+}
+
+const { items, title = 'Common questions' } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">{title}</h2>
+      <div class="faq__list">
+        {items.map((item) => (
+          <details class="faq__item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .faq__list {
+    border-top: 2px solid var(--rule-strong);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 3.5rem;
+    padding-block: var(--space-3);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    flex: none;
+    content: '+';
+    content: '+' / '';
+    color: var(--clinic-teal);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .faq__item[open] summary::after {
+    content: '\2212';
+    content: '\2212' / '';
+  }
+
+  .faq__item summary:hover {
+    color: var(--clinic-teal);
+  }
+
+  .faq__item p {
+    margin: 0 0 var(--space-4);
+    color: var(--text-soft);
+  }
+
+  /* Ease the answer open where the browser supports it. Instant elsewhere and under reduced motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    .faq__item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size var(--dur) var(--ease-out),
+        content-visibility var(--dur) allow-discrete;
+    }
+
+    .faq__item[open]::details-content {
+      block-size: auto;
+    }
+  }
+</style>

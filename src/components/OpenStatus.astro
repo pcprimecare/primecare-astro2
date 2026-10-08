@@ -1,0 +1,137 @@
+---
+/**
+ * "Open now" / "Closed now" for the clinic, worked out in the visitor's browser against the clinic's own
+ * time zone (America/Edmonton), including Alberta statutory holidays and the midday break.
+ *
+ * The static hours table is always in the HTML, so crawlers and visitors without JavaScript lose nothing.
+ * This is the page's one orchestrated moment: when the status resolves it eases in once.
+ */
+---
+
+<div class="status" data-open-status data-state="pending">
+  <p class="status__headline">
+    <span class="status__dot" aria-hidden="true"></span>
+    <span data-status-headline></span>
+  </p>
+  <p class="status__detail" data-status-detail></p>
+</div>
+
+<script>
+  import { clinicStatus } from '../lib/hours';
+  import { hoursConfig } from '../data/hours';
+
+  const panels = document.querySelectorAll<HTMLElement>('[data-open-status]');
+
+  function render(): void {
+    const now = new Date();
+    const status = clinicStatus(now, hoursConfig);
+    const weekday = new Intl.DateTimeFormat('en-CA', { weekday: 'long', timeZone: hoursConfig.timezone }).format(now);
+
+    for (const panel of panels) {
+      const headline = panel.querySelector('[data-status-headline]');
+      const detail = panel.querySelector('[data-status-detail]');
+      if (headline) headline.textContent = status.headline;
+      if (detail) detail.textContent = status.detail;
+      panel.dataset.open = String(status.open);
+      panel.dataset.state = 'ready';
+    }
+
+    // The panel title reads "Clinic hours" without JavaScript and "Today, Thursday" with it.
+    for (const label of document.querySelectorAll('[data-today-label]')) {
+      label.textContent = `Today, ${weekday}`;
+    }
+  }
+
+  if (panels.length > 0) {
+    render();
+    window.setInterval(render, 60_000);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) render();
+    });
+  }
+</script>
+
+<style>
+  .status {
+    /* Reserve the space so nothing jumps when the text arrives. */
+    min-height: 4.75rem;
+  }
+
+  .status[data-state='pending'] {
+    visibility: hidden;
+  }
+
+  .status__headline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-1);
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 650;
+    line-height: 1.2;
+  }
+
+  .status__dot {
+    flex: none;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--logo-teal);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--logo-teal) 35%, transparent);
+  }
+
+  /* Closed: a hollow ring. The words say it too, so colour is never the only signal. */
+  .status[data-open='false'] .status__dot {
+    background: transparent;
+    border: 3px solid currentColor;
+    box-shadow: none;
+  }
+
+  .status__detail {
+    margin: 0;
+    max-width: none;
+    font-family: var(--font-heading, Georgia, serif);
+    font-weight: 500;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--status-soft, var(--text-soft));
+  }
+
+  /* Windows high-contrast mode removes background colours, so give the dot an outline in system colours. */
+  @media (forced-colors: active) {
+    .status__dot {
+      forced-color-adjust: none;
+      background: Highlight;
+      border: 3px solid CanvasText;
+      box-shadow: none;
+    }
+
+    .status[data-open='false'] .status__dot {
+      background: Canvas;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .status[data-state='ready'] {
+      animation: status-in var(--dur-slow) var(--ease-out) both;
+    }
+  }
+
+  @keyframes status-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* No JavaScript: the hours table below carries the information. */
+  @media (scripting: none) {
+    .status {
+      display: none;
+    }
+  }
+</style>
